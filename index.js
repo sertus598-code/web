@@ -1,94 +1,72 @@
-<!DOCTYPE html>
-<html lang="ro">
-<head>
-  <meta charset="UTF-8" />
-  <title>Teste medicale</title>
-</head>
-<body>
-  <h1>Teste medicale</h1>
-  <button id="login-btn">Login cu Discord</button>
-  <button id="logout-btn" style="display:none;">Logout</button>
-  <div id="welcome"></div>
-  <div id="test-area" style="display:none;"></div>
+require('dotenv').config();
+const express = require('express');
+const session = require('express-session');
+const passport = require('passport');
+const DiscordStrategy = require('passport-discord').Strategy;
+const cors = require('cors');
 
-  <script>
-    const loginBtn = document.getElementById('login-btn');
-    const logoutBtn = document.getElementById('logout-btn');
-    const welcome = document.getElementById('welcome');
-    const testArea = document.getElementById('test-area');
+const app = express();
 
-    loginBtn.onclick = () => {
-      window.location.href = 'http://localhost:3000/auth/discord';
-    };
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((obj, done) => done(null, obj));
 
-    logoutBtn.onclick = () => {
-      fetch('http://localhost:3000/logout', { credentials: 'include' })
-        .then(() => window.location.reload());
-    };
+passport.use(new DiscordStrategy({
+  clientID: process.env.1402058435977150494,
+  clientSecret: process.env.1402058435977150494
+  callbackURL: process.env.https://discord.com/oauth2/authorize?client_id=1402058435977150494
+  scope: ['identify']
+}, (accessToken, refreshToken, profile, done) => done(null, profile)));
 
-    // Verifică dacă ești logat și afișează testele
-    fetch('http://localhost:3000/api/user', { credentials: 'include' })
-      .then(res => {
-        if (!res.ok) throw new Error('Not logged in');
-        return res.json();
-      })
-      .then(user => {
-        loginBtn.style.display = 'none';
-        logoutBtn.style.display = 'inline';
-        welcome.textContent = `Bun venit, ${user.username}!`;
-        showTests();
-      })
-      .catch(() => {
-        loginBtn.style.display = 'inline';
-        logoutBtn.style.display = 'none';
-      });
+app.use(cors({
+  origin: 'http://localhost:8080',
+  credentials: true
+}));
 
-    function showTests() {
-      testArea.style.display = 'block';
-      testArea.innerHTML = '<h2>Teste disponibile:</h2><ul>' +
-        '<li><button onclick="loadTest(\'RADIO\')">RADIO</button></li>' +
-        '<li><button onclick="loadTest(\'BLS\')">BLS</button></li>' +
-        '</ul><div id="questions"></div>';
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+function ensureAuth(req, res, next) {
+  if (req.isAuthenticated()) return next();
+  res.status(401).json({ error: 'Nu ești autentificat' });
+}
+
+app.get('/auth/discord', passport.authenticate('discord'));
+
+app.get('/auth/discord/callback',
+  passport.authenticate('discord', { failureRedirect: '/' }),
+  (req, res) => {
+    res.redirect('http://localhost:8080');
+  }
+);
+
+app.get('/logout', (req, res) => {
+  req.logout(() => res.redirect('http://localhost:8080'));
+});
+
+app.get('/api/user', ensureAuth, (req, res) => {
+  res.json({ username: req.user.username, id: req.user.id });
+});
+
+const tests = {
+  RADIO: [
+    {
+      question: 'Care este formula chimică a apei?',
+      options: ['H2O', 'CO2', 'O2'],
+      correct: 'H2O'
     }
+  ]
+};
 
-    function loadTest(testName) {
-      fetch(`http://localhost:3000/api/tests/${testName}`, { credentials: 'include' })
-        .then(res => res.json())
-        .then(questions => {
-          const qDiv = document.getElementById('questions');
-          qDiv.innerHTML = '';
-          questions.forEach((q, i) => {
-            const qElem = document.createElement('div');
-            qElem.innerHTML = `<p>${i+1}. ${q.question}</p>`;
-            q.options.forEach(opt => {
-              const id = `q${i}_${opt}`;
-              qElem.innerHTML += `
-                <input type="radio" id="${id}" name="q${i}" value="${opt}" required>
-                <label for="${id}">${opt}</label><br>
-              `;
-            });
-            qDiv.appendChild(qElem);
-          });
+app.get('/api/tests/:testName', ensureAuth, (req, res) => {
+  const test = tests[req.params.testName];
+  if (!test) return res.status(404).json({ error: 'Test inexistent' });
+  res.json(test);
+});
 
-          const submitBtn = document.createElement('button');
-          submitBtn.textContent = 'Trimite răspunsurile';
-          submitBtn.onclick = () => checkAnswers(questions);
-          qDiv.appendChild(submitBtn);
-        });
-    }
-
-    function checkAnswers(questions) {
-      let allCorrect = true;
-      for(let i = 0; i < questions.length; i++) {
-        const options = document.getElementsByName(`q${i}`);
-        let selected = null;
-        for (const opt of options) {
-          if(opt.checked) selected = opt.value;
-        }
-        if(selected !== questions[i].correct) allCorrect = false;
-      }
-      alert(allCorrect ? 'Felicitări, toate răspunsurile sunt corecte!' : 'Unele răspunsuri sunt greșite. Mai încearcă!');
-    }
-  </script>
-</body>
-</html>
+app.listen(3000, () => console.log('Server pornit pe http://localhost:3000'));
