@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROGRAMARE M.M.L.S</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            font-size: 19px;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url(image_medici.png);
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .container {
+            width: 950px;
+            padding: 50px;
+            border: 5px solid #000000;
+            border-radius: 30px;
+            background-color: #700101;
+        }
+
+        h4 {
+            margin-bottom: 25px;
+            font-size: 45px;
+            color: white;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 15px;
+        }
+
+        textarea {
+            line-height: 50%;
+            text-align: left;
+            align-content: normal;
+        }
+
+        #submit {
+            border: none;
+            background-color: rgb(24, 24, 24);
+            color: white;
+            width: 320px;
+            margin-top: 20px;
+            border-radius: 15px;
+        }
+
+        #submit:hover {
+            background-color: #333333;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <form method="post" action="https://script.google.com/macros/s/AKfycbyWIqMXbDTCrvc4eyVTJYvHj7FshwKBy1Y802tjCY2y-UEZeQDLcnbCBD9CR0NaEWPq/exec" name="contact-form">
+            <h4>PROGRAMARE M.M.L.S</h4>
+            <input type="text" name="NUME" placeholder="Nume Prenume" required>
+            <input type="number" name="ID" placeholder="CNP (ID)" required> 
+            <input type="text" name="NUME AFACERE" placeholder="Numele afacerii" required>
+            <input type="text" name="NUMAR DE TEL" placeholder="Numar de telefon" required maxlength="8">
+            <input type="text" name="EMAIL" placeholder="Email (nume discord)" required>
+            <input type="text" name="AFACERE" placeholder="Tipul de afacere (Service, Frizerie, etc...)" required>
+            <input type="text" name="ADRESA" placeholder="Adresa afacerii, cat mai in detaliu" required minlength="10">
+            <textarea name="DETALII" rows="7" placeholder="Detalii extra"></textarea>
+            <input type="submit" value="Trimite Formularul" id="submit">
+        </form>
+        <small>Pentru intrebari sau alte probleme puteti contacta: saliva_medicuthau sau kishu4388</small>
+    </div>
+
+    <!-- Embedded JavaScript for form submission -->
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyaEtZ9ynZU5SlO1wt6vQyIuwbaUGyjQ-46jP8k_snNiMEVPrfHu7LvrytsVgtwQSKe/exec';
+
+        const form = document.forms['contact-form'];
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            fetch(scriptURL, { method: 'POST', body: new FormData(form) })
+                .then(response => alert("Multumim, cererea dvs a fost inregistrata in baza noastra de date."))
+                .then(() => { window.location.reload(); })
+                .catch(error => console.error('Error!', error.message));
+        });
+    </script>
+</body>
+</html>
