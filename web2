@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <title>Acasă – Testele Departamentului Medical</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 50px;
+      text-align: center;
+    }
+    .container {
+      background-color: white;
+      max-width: 400px;
+      margin: auto;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    button {
+      background-color: #5865F2;
+      color: white;
+      font-size: 16px;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #4752c4;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Bine ai venit!</h1>
+    <p>Accesează platforma noastră de teste grilă medicale.</p>
+    <button onclick="window.location.href='discordlogin.html'">Autentificare & Test</button>
+  </div>
+</body>
+</html>
