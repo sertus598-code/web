@@ -1,0 +1,6 @@
+/server
+├── index.js
+├── questions.json
+├── responses.json (creat automat)
+├── .env
+├── package.json
