@@ -1,0 +1,12 @@
+[
+  {
+    "question": "Ce medicament administrezi unui pacient aflat în stare de anemie?",
+    "options": ["Fier", "Hidrocortizon", "Paracetamol", "Vitamina C"],
+    "correct": 0
+  },
+  {
+    "question": "Câte oase are corpul uman?",
+    "options": ["206", "205", "201", "210"],
+    "correct": 0
+  }
+]
