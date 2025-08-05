@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Test FPlayT</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div class="container">
+    <h1>Bun venit la Testul FPlayT</h1>
+    <button onclick="loginWithDiscord()">Login cu Discord</button>
+  </div>
+
+  <script>
+    function loginWithDiscord() {
+      // Redirecționează către backend (unde e configurat Discord OAuth2)
+      window.location.href = "http://localhost:3000/auth/discord";
+    }
+  </script>
+</body>
+</html>
